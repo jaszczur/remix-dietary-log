@@ -1,4 +1,4 @@
-import type { FoodLog, FoodLogEntry, User } from "@prisma/client";
+import type { FoodLog, FoodLogEntry, Meal, User } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
@@ -34,5 +34,11 @@ export function getFoodLogEntry({ id }: { id: FoodLogEntry["id"] }) {
   return prisma.foodLogEntry.findUnique({
     where: { id },
     include: { meals: true },
+  });
+}
+
+export function createMeal(meal: Omit<Meal, "id">) {
+  return prisma.meal.create({
+    data: meal,
   });
 }
