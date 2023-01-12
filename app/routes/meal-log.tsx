@@ -21,7 +21,7 @@ export default function DaysLayout() {
         <Navigation />
       </div>
       <main className="grow p-8">
-        <div className="flex">
+        <div className="flex flex-col xl:flex-row">
           <div className="pr-8">
             <ul>
               <li>

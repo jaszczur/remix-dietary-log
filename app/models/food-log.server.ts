@@ -42,3 +42,9 @@ export function createMeal(meal: Omit<Meal, "id">) {
     data: meal,
   });
 }
+
+export function deleteMeal(id: Meal["id"]) {
+  return prisma.meal.delete({
+    where: { id },
+  });
+}

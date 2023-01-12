@@ -38,8 +38,8 @@ export default function FoodLogEditor({ entries }: Props) {
     );
   });
   return (
-    <div className="flex">
-      <div className="overflow-x-auto pr-8">
+    <div className="flex flex-col lg:flex-row">
+      <div className=" pr-8">
         <table className="table-zebra table w-full">
           <thead>
             <tr>
