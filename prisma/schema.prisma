@@ -1,0 +1,79 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id    String @id @default(cuid())
+  email String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  password Password?
+  notes    Note[]
+  FoodLog  FoodLog[]
+}
+
+model Password {
+  hash String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique
+}
+
+model Note {
+  id    String @id @default(cuid())
+  title String
+  body  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+}
+
+model FoodType {
+  id           String         @id @default(cuid())
+  name         String
+  comment      String?
+  strategy     String
+  unit         String
+  amount       Float
+  foodLogEntry FoodLogEntry[]
+}
+
+model FoodLog {
+  id String @id @default(cuid())
+
+  date    String
+  entries FoodLogEntry[]
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+}
+
+model FoodLogEntry {
+  id    String @id @default(cuid())
+  meals Meal[]
+
+  foodLog   FoodLog @relation(fields: [foodLogId], references: [id])
+  foodLogId String
+
+  foodType   FoodType @relation(fields: [foodTypeId], references: [id])
+  foodTypeId String
+}
+
+model Meal {
+  id      String @id @default(cuid())
+  amount  Float
+  comment String
+
+  foodLogEntry   FoodLogEntry @relation(fields: [foodLogEntryId], references: [id])
+  foodLogEntryId String
+}
