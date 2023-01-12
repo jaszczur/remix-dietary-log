@@ -1,16 +1,14 @@
 import type { FoodLogEntry, FoodType, Meal } from "@prisma/client";
-import { useState } from "react";
+import { Link, Outlet, useParams } from "@remix-run/react";
 
 type Props = {
   entries: (FoodLogEntry & { foodType: FoodType; meals: Meal[] })[];
 };
 
 export default function FoodLogEditor({ entries }: Props) {
-  const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>(
-    undefined
-  );
+  const { foodType } = useParams();
   const rows = entries.map((entry) => {
-    const active = selectedEntryId === entry.id;
+    const active = foodType === entry.foodTypeId;
     const meals = entry.meals.length;
     const hasMeals = meals > 0;
     return (
@@ -25,13 +23,13 @@ export default function FoodLogEditor({ entries }: Props) {
           {entry.meals.reduce((result, meal) => result + meal.amount, 0.0)}
         </td>
         <td>
-          <button
+          <Link
             className={`btn-sm btn gap-2 ${active ? "btn-disabled" : ""}`}
-            onClick={() => setSelectedEntryId(entry.id)}
+            to={entry.foodTypeId}
           >
             Meals
             {hasMeals && <div className="badge-secondary badge">{meals}</div>}
-          </button>
+          </Link>
         </td>
       </tr>
     );
@@ -53,15 +51,9 @@ export default function FoodLogEditor({ entries }: Props) {
         </table>
       </div>
 
-      {/* <div className="pl-8">
-        {selectedEntry && (
-          <EntryEditor
-            entry={selectedEntry}
-            onAdd={addMeal}
-            mutating={isMutating}
-          />
-        )}
-      </div> */}
+      <div className="pl-8">
+        <Outlet />
+      </div>
     </div>
   );
 }
