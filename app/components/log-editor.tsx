@@ -2,13 +2,16 @@ import type { FoodLogEntry, FoodType, Meal } from "@prisma/client";
 import { Link, Outlet, useParams } from "@remix-run/react";
 
 type Props = {
-  entries: (FoodLogEntry & { foodType: FoodType; meals: Meal[] })[];
+  entries: (FoodLogEntry & {
+    foodType: FoodType;
+    meals: Pick<Meal, "amount">[];
+  })[];
 };
 
 export default function FoodLogEditor({ entries }: Props) {
-  const { foodType } = useParams();
+  const { entryId } = useParams();
   const rows = entries.map((entry) => {
-    const active = foodType === entry.foodTypeId;
+    const active = entryId === entry.id;
     const meals = entry.meals.length;
     const hasMeals = meals > 0;
     return (
@@ -25,7 +28,7 @@ export default function FoodLogEditor({ entries }: Props) {
         <td>
           <Link
             className={`btn-sm btn gap-2 ${active ? "btn-disabled" : ""}`}
-            to={entry.foodTypeId}
+            to={entry.id}
           >
             Meals
             {hasMeals && <div className="badge-secondary badge">{meals}</div>}

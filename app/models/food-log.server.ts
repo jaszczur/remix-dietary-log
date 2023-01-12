@@ -1,4 +1,4 @@
-import type { FoodLog, User } from "@prisma/client";
+import type { FoodLog, FoodLogEntry, User } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
@@ -22,10 +22,17 @@ export function getFoodLog({
     include: {
       entries: {
         include: {
-          meals: true,
+          meals: { select: { amount: true } },
           foodType: true,
         },
       },
     },
+  });
+}
+
+export function getFoodLogEntry({ id }: { id: FoodLogEntry["id"] }) {
+  return prisma.foodLogEntry.findUnique({
+    where: { id },
+    include: { meals: true },
   });
 }
